@@ -1,0 +1,11 @@
+# Binaries
+/sis
+*.exe
+
+# Test / coverage
+*.out
+
+# Editor/OS
+.idea/
+.vscode/
+.DS_Store
