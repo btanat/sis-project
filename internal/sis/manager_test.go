@@ -63,6 +63,8 @@ func TestProcessTask_Success(t *testing.T) {
 	if err := m.ProcessTask(task.ID); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	// CreateTask returns a copy, so read the current state from the store.
+	task, _ = m.GetTask(task.ID)
 	if task.State != StateCompleted {
 		t.Errorf("state = %s, want %s", task.State, StateCompleted)
 	}
@@ -96,6 +98,7 @@ func TestProcessTask_ProcessorError(t *testing.T) {
 	if err := m.ProcessTask(task.ID); !errors.Is(err, ErrInvalidInput) {
 		t.Errorf("expected ErrInvalidInput, got %v", err)
 	}
+	task, _ = m.GetTask(task.ID)
 	if task.State != StateFailed {
 		t.Errorf("state = %s, want %s", task.State, StateFailed)
 	}
@@ -115,6 +118,8 @@ func TestMultipleIndependentTasks(t *testing.T) {
 		t.Fatalf("process t2: %v", err)
 	}
 
+	t1, _ = m.GetTask(t1.ID)
+	t2, _ = m.GetTask(t2.ID)
 	if t1.ID == t2.ID {
 		t.Error("expected distinct IDs for distinct tasks")
 	}

@@ -19,11 +19,25 @@ var (
 
 	// ErrInvalidTransition is returned when an operation is attempted on a task
 	// whose current state does not allow it (for example, processing a task
-	// that is already completed).
+	// that is already completed, or submitting a task that is already queued).
 	ErrInvalidTransition = errors.New("sis: invalid state transition")
 
 	// ErrInvalidInput is returned by a processor when the input is syntactically
 	// present but not valid for that specific domain (for example, the
 	// statistics processor receiving non-numeric values).
 	ErrInvalidInput = errors.New("sis: invalid input for processor")
+
+	// ErrQueueFull is returned by Submit when the bounded task queue has no free
+	// slot. The task stays Pending and can be submitted again later.
+	ErrQueueFull = errors.New("sis: task queue is full")
+
+	// ErrPoolNotRunning is returned by Submit before Start or after Stop.
+	ErrPoolNotRunning = errors.New("sis: worker pool is not running")
+
+	// ErrPoolAlreadyStarted is returned when Start is called a second time.
+	ErrPoolAlreadyStarted = errors.New("sis: worker pool already started")
+
+	// ErrInvalidPoolConfig is returned by Start when the number of workers or
+	// the queue capacity is less than 1.
+	ErrInvalidPoolConfig = errors.New("sis: workers and queue size must be at least 1")
 )
